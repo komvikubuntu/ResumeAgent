@@ -1,0 +1,75 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: resumeagent-mariadb
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    networks:
+      - resumeagent-network
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    container_name: resumeagent-wordpress
+    restart: unless-stopped
+
+    depends_on:
+      - mariadb
+
+    env_file:
+      - .env
+
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+
+    ports:
+      - "8080:80"
+
+
+    volumes:
+      - wordpress_data:/var/www/html
+
+
+    networks:
+      - resumeagent-network
+
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: resumeagent-n8n
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "5678:5678"
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+    networks:
+      - resumeagent-network
+
+volumes:
+  mariadb_data:
+  n8n_data:
+  wordpress_data:
+
+networks:
+  resumeagent-network:
+    driver: bridge
