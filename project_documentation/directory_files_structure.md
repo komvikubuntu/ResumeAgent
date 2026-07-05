@@ -201,6 +201,7 @@ This script automatically generates all required folders and files for the Resum
 ### Usage
 
 ```bash
+
 chmod +x scripts/bootstrap/generate_filesystem.sh
 ./scripts/bootstrap/generate_filesystem.sh
 

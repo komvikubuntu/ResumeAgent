@@ -5,8 +5,8 @@ set -e
 echo "🚀 Creating ResumeAgent structure..."
 
 # Root folders
-mkdir -p ResumeAgent
-cd ResumeAgent
+# mkdir -p ResumeAgent
+# cd ResumeAgent
 
 # =========================
 # Core folders
